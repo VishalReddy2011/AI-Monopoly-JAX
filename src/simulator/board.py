@@ -1,0 +1,96 @@
+# src/simulator/board.py
+
+BOARD_SPACES = [
+    {"id": 0, "name": "Go", "type": "go", "color_group": None, "cost": 0, "rent": [], "house_cost": 0, "mortgage_value": 0},
+    {"id": 1, "name": "Old Kent Road", "type": "property", "color_group": "Brown", "cost": 60, "rent": [2, 4, 10, 30, 90, 160, 250], "house_cost": 50, "mortgage_value": 30},
+    {"id": 2, "name": "Community Chest", "type": "chest", "color_group": None, "cost": 0, "rent": [], "house_cost": 0, "mortgage_value": 0},
+    {"id": 3, "name": "Whitechapel Road", "type": "property", "color_group": "Brown", "cost": 60, "rent": [4, 8, 20, 60, 180, 320, 450], "house_cost": 50, "mortgage_value": 30},
+    {"id": 4, "name": "Income Tax", "type": "tax", "color_group": None, "cost": 200, "rent": [], "house_cost": 0, "mortgage_value": 0},
+    {"id": 5, "name": "Kings Cross Station", "type": "station", "color_group": "Station", "cost": 200, "rent": [25, 50, 100, 200], "house_cost": 0, "mortgage_value": 100},
+    {"id": 6, "name": "The Angel, Islington", "type": "property", "color_group": "Light Blue", "cost": 100, "rent": [6, 12, 30, 90, 270, 400, 550], "house_cost": 50, "mortgage_value": 50},
+    {"id": 7, "name": "Chance", "type": "chance", "color_group": None, "cost": 0, "rent": [], "house_cost": 0, "mortgage_value": 0},
+    {"id": 8, "name": "Euston Road", "type": "property", "color_group": "Light Blue", "cost": 100, "rent": [6, 12, 30, 90, 270, 400, 550], "house_cost": 50, "mortgage_value": 50},
+    {"id": 9, "name": "Pentonville Road", "type": "property", "color_group": "Light Blue", "cost": 120, "rent": [8, 16, 40, 100, 300, 450, 600], "house_cost": 50, "mortgage_value": 60},
+    {"id": 10, "name": "Jail / Just Visiting", "type": "jail", "color_group": None, "cost": 0, "rent": [], "house_cost": 0, "mortgage_value": 0},
+    {"id": 11, "name": "Pall Mall", "type": "property", "color_group": "Pink", "cost": 140, "rent": [10, 20, 50, 150, 450, 625, 750], "house_cost": 100, "mortgage_value": 70},
+    {"id": 12, "name": "Electric Company", "type": "utility", "color_group": "Utility", "cost": 150, "rent": [], "house_cost": 0, "mortgage_value": 75},
+    {"id": 13, "name": "Whitehall", "type": "property", "color_group": "Pink", "cost": 140, "rent": [10, 20, 50, 150, 450, 625, 750], "house_cost": 100, "mortgage_value": 70},
+    {"id": 14, "name": "Northumberland Avenue", "type": "property", "color_group": "Pink", "cost": 160, "rent": [12, 24, 60, 180, 500, 700, 900], "house_cost": 100, "mortgage_value": 80},
+    {"id": 15, "name": "Marylebone Station", "type": "station", "color_group": "Station", "cost": 200, "rent": [25, 50, 100, 200], "house_cost": 0, "mortgage_value": 100},
+    {"id": 16, "name": "Bow Street", "type": "property", "color_group": "Orange", "cost": 180, "rent": [14, 28, 70, 200, 550, 750, 950], "house_cost": 100, "mortgage_value": 90},
+    {"id": 17, "name": "Community Chest", "type": "chest", "color_group": None, "cost": 0, "rent": [], "house_cost": 0, "mortgage_value": 0},
+    {"id": 18, "name": "Marlborough Street", "type": "property", "color_group": "Orange", "cost": 180, "rent": [14, 28, 70, 200, 550, 750, 950], "house_cost": 100, "mortgage_value": 90},
+    {"id": 19, "name": "Vine Street", "type": "property", "color_group": "Orange", "cost": 200, "rent": [16, 32, 80, 220, 600, 800, 1000], "house_cost": 100, "mortgage_value": 100},
+    {"id": 20, "name": "Free Parking", "type": "free_parking", "color_group": None, "cost": 0, "rent": [], "house_cost": 0, "mortgage_value": 0},
+    {"id": 21, "name": "Strand", "type": "property", "color_group": "Red", "cost": 220, "rent": [18, 36, 90, 250, 700, 875, 1050], "house_cost": 150, "mortgage_value": 110},
+    {"id": 22, "name": "Chance", "type": "chance", "color_group": None, "cost": 0, "rent": [], "house_cost": 0, "mortgage_value": 0},
+    {"id": 23, "name": "Fleet Street", "type": "property", "color_group": "Red", "cost": 220, "rent": [18, 36, 90, 250, 700, 875, 1050], "house_cost": 150, "mortgage_value": 110},
+    {"id": 24, "name": "Trafalgar Square", "type": "property", "color_group": "Red", "cost": 240, "rent": [20, 40, 100, 300, 750, 925, 1100], "house_cost": 150, "mortgage_value": 120},
+    {"id": 25, "name": "Fenchurch St. Station", "type": "station", "color_group": "Station", "cost": 200, "rent": [25, 50, 100, 200], "house_cost": 0, "mortgage_value": 100},
+    {"id": 26, "name": "Leicester Square", "type": "property", "color_group": "Yellow", "cost": 260, "rent": [22, 44, 110, 330, 800, 975, 1150], "house_cost": 150, "mortgage_value": 130},
+    {"id": 27, "name": "Coventry Street", "type": "property", "color_group": "Yellow", "cost": 260, "rent": [22, 44, 110, 330, 800, 975, 1150], "house_cost": 150, "mortgage_value": 130},
+    {"id": 28, "name": "Water Works", "type": "utility", "color_group": "Utility", "cost": 150, "rent": [], "house_cost": 0, "mortgage_value": 75},
+    {"id": 29, "name": "Piccadilly", "type": "property", "color_group": "Yellow", "cost": 280, "rent": [24, 48, 120, 360, 850, 1025, 1200], "house_cost": 150, "mortgage_value": 140},
+    {"id": 30, "name": "Go to Jail", "type": "go_to_jail", "color_group": None, "cost": 0, "rent": [], "house_cost": 0, "mortgage_value": 0},
+    {"id": 31, "name": "Regent Street", "type": "property", "color_group": "Green", "cost": 300, "rent": [26, 52, 130, 390, 900, 1100, 1275], "house_cost": 200, "mortgage_value": 150},
+    {"id": 32, "name": "Oxford Street", "type": "property", "color_group": "Green", "cost": 300, "rent": [26, 52, 130, 390, 900, 1100, 1275], "house_cost": 200, "mortgage_value": 150},
+    {"id": 33, "name": "Community Chest", "type": "chest", "color_group": None, "cost": 0, "rent": [], "house_cost": 0, "mortgage_value": 0},
+    {"id": 34, "name": "Bond Street", "type": "property", "color_group": "Green", "cost": 320, "rent": [28, 56, 150, 450, 1000, 1200, 1400], "house_cost": 200, "mortgage_value": 160},
+    {"id": 35, "name": "Liverpool St. Station", "type": "station", "color_group": "Station", "cost": 200, "rent": [25, 50, 100, 200], "house_cost": 0, "mortgage_value": 100},
+    {"id": 36, "name": "Chance", "type": "chance", "color_group": None, "cost": 0, "rent": [], "house_cost": 0, "mortgage_value": 0},
+    {"id": 37, "name": "Park Lane", "type": "property", "color_group": "Dark Blue", "cost": 350, "rent": [35, 70, 175, 500, 1100, 1300, 1500], "house_cost": 200, "mortgage_value": 175},
+    {"id": 38, "name": "Super Tax", "type": "tax", "color_group": None, "cost": 100, "rent": [], "house_cost": 0, "mortgage_value": 0},
+    {"id": 39, "name": "Mayfair", "type": "property", "color_group": "Dark Blue", "cost": 400, "rent": [50, 100, 200, 600, 1400, 1700, 2000], "house_cost": 200, "mortgage_value": 200}
+]
+
+# Map color groups to total number of sites in that color group
+COLOR_GROUP_SIZES = {
+    "Brown": 2,
+    "Light Blue": 3,
+    "Pink": 3,
+    "Orange": 3,
+    "Red": 3,
+    "Yellow": 3,
+    "Green": 3,
+    "Dark Blue": 2,
+    "Station": 4,
+    "Utility": 2
+}
+
+CHANCE_CARDS = [
+    {"id": 1, "text": "Advance to Go (Collect £200)"},
+    {"id": 2, "text": "Advance to Trafalgar Square. If you pass Go, collect £200"},
+    {"id": 3, "text": "Advance to Mayfair"},
+    {"id": 4, "text": "Advance to Pall Mall. If you pass Go, collect £200"},
+    {"id": 5, "text": "Advance to the nearest Station. If unowned, you may buy it. If owned, pay twice the rental."},
+    {"id": 6, "text": "Advance to the nearest Station. If unowned, you may buy it. If owned, pay twice the rental."},
+    {"id": 7, "text": "Advance token to nearest Utility. If unowned, you may buy it. If owned, pay 10x dice throw."},
+    {"id": 8, "text": "Bank pays you dividend of £50"},
+    {"id": 9, "text": "Get Out of Jail Free"},
+    {"id": 10, "text": "Go Back 3 Spaces"},
+    {"id": 11, "text": "Go to Jail. Go directly to Jail, do not pass Go, do not collect £200"},
+    {"id": 12, "text": "Make general repairs on all your property. For each house pay £25. For each hotel pay £100"},
+    {"id": 13, "text": "Speeding fine £15"},
+    {"id": 14, "text": "Take a trip to Kings Cross Station. If you pass Go, collect £200"},
+    {"id": 15, "text": "You have been elected Chairman of the Board. Pay each player £50"},
+    {"id": 16, "text": "Your building loan matures. Collect £150"}
+]
+
+COMMUNITY_CHEST_CARDS = [
+    {"id": 1, "text": "Advance to Go (Collect £200)"},
+    {"id": 2, "text": "Bank error in your favour. Collect £200"},
+    {"id": 3, "text": "Doctor’s fee. Pay £50"},
+    {"id": 4, "text": "From sale of stock you get £50"},
+    {"id": 5, "text": "Get Out of Jail Free"},
+    {"id": 6, "text": "Go to Jail. Go directly to jail, do not pass Go, do not collect £200"},
+    {"id": 7, "text": "Holiday fund matures. Receive £100"},
+    {"id": 8, "text": "Income tax refund. Collect £20"},
+    {"id": 9, "text": "It is your birthday. Collect £10 from every player"},
+    {"id": 10, "text": "Life insurance matures. Collect £100"},
+    {"id": 11, "text": "Pay hospital fees of £100"},
+    {"id": 12, "text": "Pay school fees of £50"},
+    {"id": 13, "text": "Receive £25 consultancy fee"},
+    {"id": 14, "text": "You are assessed for street repairs. £40 per house. £115 per hotel"},
+    {"id": 15, "text": "You have won second prize in a beauty contest. Collect £10"},
+    {"id": 16, "text": "You inherit £100"}
+]

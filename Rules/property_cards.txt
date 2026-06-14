@@ -1,0 +1,55 @@
+Old Kent Road: Rent M2, With Color Set M4, 1 House M10, 2 Houses M30, 3 Houses M90, 4 Houses M160, Hotel M250, House Cost M50, Hotel Cost M50.
+
+Whitechapel Road: Rent M4, With Color Set M8, 1 House M20, 2 Houses M60, 3 Houses M180, 4 Houses M320, Hotel M450, House Cost M50, Hotel Cost M50.
+
+The Angel, Islington: Rent M6, With Color Set M12, 1 House M30, 2 Houses M90, 3 Houses M270, 4 Houses M400, Hotel M550, House Cost M50, Hotel Cost M50.
+
+Euston Road: Rent M6, With Color Set M12, 1 House M30, 2 Houses M90, 3 Houses M270, 4 Houses M400, Hotel M550, House Cost M50, Hotel Cost M50.
+
+Pentonville Road: Rent M8, With Color Set M16, 1 House M40, 2 Houses M100, 3 Houses M300, 4 Houses M450, Hotel M600, House Cost M50, Hotel Cost M50.
+
+Pall Mall: Rent M10, With Color Set M20, 1 House M50, 2 Houses M150, 3 Houses M450, 4 Houses M625, Hotel M750, House Cost M100, Hotel Cost M100.
+
+Whitehall: Rent M10, With Color Set M20, 1 House M50, 2 Houses M150, 3 Houses M450, 4 Houses M625, Hotel M750, House Cost M100, Hotel Cost M100.
+
+Northumberland Avenue: Rent M12, With Color Set M24, 1 House M60, 2 Houses M180, 3 Houses M500, 4 Houses M700, Hotel M900, House Cost M100, Hotel Cost M100.
+
+Bow Street: Rent M14, With Color Set M28, 1 House M70, 2 Houses M200, 3 Houses M550, 4 Houses M750, Hotel M950, House Cost M100, Hotel Cost M100.
+
+Marlborough Street: Rent M14, With Color Set M28, 1 House M70, 2 Houses M200, 3 Houses M550, 4 Houses M750, Hotel M950, House Cost M100, Hotel Cost M100.
+
+Vine Street: Rent M16, With Color Set M32, 1 House M80, 2 Houses M220, 3 Houses M600, 4 Houses M800, Hotel M1000, House Cost M100, Hotel Cost M100.
+
+Strand: Rent M18, With Color Set M36, 1 House M90, 2 Houses M250, 3 Houses M700, 4 Houses M875, Hotel M1050, House Cost M150, Hotel Cost M150.
+
+Fleet Street: Rent M18, With Color Set M36, 1 House M90, 2 Houses M250, 3 Houses M700, 4 Houses M875, Hotel M1050, House Cost M150, Hotel Cost M150.
+
+Trafalgar Square: Rent M20, With Color Set M40, 1 House M100, 2 Houses M300, 3 Houses M750, 4 Houses M925, Hotel M1100, House Cost M150, Hotel Cost M150.
+
+Leicester Square: Rent M22, With Color Set M44, 1 House M110, 2 Houses M330, 3 Houses M800, 4 Houses M975, Hotel M1150, House Cost M150, Hotel Cost M150.
+
+Coventry Street: Rent M22, With Color Set M44, 1 House M110, 2 Houses M330, 3 Houses M800, 4 Houses M975, Hotel M1150, House Cost M150, Hotel Cost M150.
+
+Piccadilly: Rent M24, With Color Set M48, 1 House M120, 2 Houses M360, 3 Houses M850, 4 Houses M1025, Hotel M1200, House Cost M150, Hotel Cost M150.
+
+Regent Street: Rent M26, With Color Set M52, 1 House M130, 2 Houses M390, 3 Houses M900, 4 Houses M1100, Hotel M1275, House Cost M200, Hotel Cost M200.
+
+Oxford Street: Rent M26, With Color Set M52, 1 House M130, 2 Houses M390, 3 Houses M900, 4 Houses M1100, Hotel M1275, House Cost M200, Hotel Cost M200.
+
+Bond Street: Rent M28, With Color Set M56, 1 House M150, 2 Houses M450, 3 Houses M1000, 4 Houses M1200, Hotel M1400, House Cost M200, Hotel Cost M200.
+
+Park Lane: Rent M35, With Color Set M70, 1 House M175, 2 Houses M500, 3 Houses M1100, 4 Houses M1300, Hotel M1500, House Cost M200, Hotel Cost M200.
+
+Mayfair: Rent M50, With Color Set M100, 1 House M200, 2 Houses M600, 3 Houses M1400, 4 Houses M1700, Hotel M2000, House Cost M200, Hotel Cost M200.
+
+Electric Company: If one Utility is owned, rent is 4 times amount shown on dice. If both Utilities are owned, rent is 10 times amount shown on dice.
+
+Water Works: If one Utility is owned, rent is 4 times amount shown on dice. If both Utilities are owned, rent is 10 times amount shown on dice.
+
+Liverpool St. Station: Rent M25, If 2 Stations are owned M50, If 3 Stations are owned M100, If 4 Stations are owned M200.
+
+Marylebone Station: Rent M25, If 2 Stations are owned M50, If 3 Stations are owned M100, If 4 Stations are owned M200.
+
+Fenchurch St. Station: Rent M25, If 2 Stations are owned M50, If 3 Stations are owned M100, If 4 Stations are owned M200.
+
+Kings Cross Station: Rent M25, If 2 Stations are owned M50, If 3 Stations are owned M100, If 4 Stations are owned M200.

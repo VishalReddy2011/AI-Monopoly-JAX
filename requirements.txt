@@ -1,0 +1,11 @@
+# Core streamlit and visualization dependencies
+streamlit
+plotly
+pandas
+matplotlib
+jinja2
+
+# JAX installation (specific options depend on CUDA availability)
+# For CPU only: pip install jax jaxlib
+# For GPU (CUDA 13): pip install "jax[cuda13]"
+jax[cuda13]
