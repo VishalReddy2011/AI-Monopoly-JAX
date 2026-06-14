@@ -1,0 +1,910 @@
+/* src/dashboard/styles.css */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+
+/* Global Reset & Layout Configuration */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+}
+
+body {
+    background-color: #05070f;
+    color: #f1f5f9;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+/* 100vh Split Panel Structure */
+.app-container {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    width: 100vw;
+    padding: 12px;
+    gap: 15px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.left-panel {
+    display: flex;
+    flex-direction: column;
+    width: 53%;
+    height: 100%;
+    justify-content: space-between;
+    overflow: visible;
+    position: relative;
+    z-index: 100;
+}
+
+.right-panel {
+    display: flex;
+    flex-direction: column;
+    width: 47%;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* ==============================================================================
+   LEFT PANEL: MONOPOLY BOARD & REPLAY CONTROLS
+   ============================================================================== */
+.board-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    min-height: 0;
+    padding: 5px 0;
+}
+
+.monopoly-board {
+    display: grid;
+    grid-template-columns: repeat(11, minmax(0, 1fr));
+    grid-template-rows: repeat(11, minmax(0, 1fr));
+    grid-gap: 3.5px;
+    width: min(850px, 82vh, 50vw);
+    height: min(850px, 82vh, 50vw);
+    background-color: #03050a;
+    border: 2.5px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    position: relative;
+    box-sizing: border-box;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+    padding: 12px;
+    overflow: visible;
+}
+
+/* Board Center Area */
+.board-center {
+    grid-column: 2 / 11;
+    grid-row: 2 / 11;
+    background-color: #05070e;
+    border: 2px dashed rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    color: #f8fafc;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.board-center-glow {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    pointer-events: none;
+    border-radius: 50%;
+    filter: blur(25px);
+    opacity: 0.15;
+}
+
+.center-title {
+    font-size: 11px;
+    color: #475569;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+}
+
+.center-active-player {
+    font-family: 'Outfit', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    margin-top: 3px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.center-player-badge {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+}
+
+.center-dice-container {
+    display: flex;
+    gap: 12px;
+    font-size: 80px;
+    line-height: 1;
+    margin: 8px 0;
+    user-select: none;
+}
+
+.center-step-info {
+    font-size: 11px;
+    color: #334155;
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* Individual Board Cells */
+.board-cell {
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 3px;
+    box-sizing: border-box;
+    overflow: visible;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.cell-name {
+    font-weight: 600;
+    line-height: 1.1;
+    text-align: center;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.cell-cost {
+    font-size: 8px;
+    color: #475569;
+    font-weight: 600;
+}
+
+.cell-tokens {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    gap: 3px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    max-width: 90%;
+    z-index: 90;
+    pointer-events: none;
+}
+
+.player-token-node {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ffffff;
+    box-shadow: 0 1.5px 3px rgba(0,0,0,0.5);
+}
+
+/* Graphical building dots indicator */
+.cell-houses-container {
+    display: flex;
+    gap: 1.5px;
+    align-items: center;
+    height: 5px;
+    overflow: visible;
+}
+
+.building-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 0.8px;
+    display: inline-block;
+}
+
+.building-dot.house {
+    background-color: #10b981;
+    box-shadow: 0 0 3px rgba(16, 185, 129, 0.4);
+}
+
+.building-dot.hotel {
+    background-color: #ef4444;
+    width: 7px;
+    height: 7px;
+    border-radius: 1.2px;
+    box-shadow: 0 0 4px rgba(239, 68, 68, 0.5);
+}
+
+.mortgage-badge {
+    background-color: #4b5563;
+    color: white;
+    padding: 0.5px 2px;
+    border-radius: 2px;
+    font-size: 5.5px;
+    font-weight: bold;
+    line-height: 1;
+}
+
+/* Ribbon Tags indicating Ownership */
+.ribbon-flag {
+    position: absolute;
+    z-index: 80;
+}
+
+.ribbon-flag-top {
+    top: -9px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 11px;
+    height: 10px;
+    clip-path: polygon(0% 100%, 100% 100%, 100% 30%, 50% 0%, 0% 30%);
+}
+
+.ribbon-flag-bottom {
+    bottom: -9px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 11px;
+    height: 10px;
+    clip-path: polygon(0% 0%, 100% 0%, 100% 70%, 50% 100%, 0% 70%);
+}
+
+.ribbon-flag-left {
+    left: -9px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 11px;
+    clip-path: polygon(100% 0%, 100% 100%, 30% 100%, 0% 50%, 30% 0%);
+}
+
+.ribbon-flag-right {
+    right: -9px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 11px;
+    clip-path: polygon(0% 0%, 0% 100%, 70% 100%, 100% 50%, 70% 0%);
+}
+
+/* Replay Controls Panel */
+.controls-panel {
+    background: rgba(15, 23, 42, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 14px;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 5px;
+}
+
+.playback-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 6px;
+}
+
+.btn {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.03);
+    color: #cbd5e1;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 6px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+}
+
+/* Tooltip Wrapper and Popup Actions Content aligned to right: 0 to prevent right side clipping */
+.tooltip-wrapper {
+    position: relative;
+    flex: 1.2;
+    display: inline-block;
+}
+
+.tooltip-wrapper .btn {
+    width: 100%;
+}
+
+.tooltip-content {
+    position: absolute;
+    bottom: calc(100% + 12px);
+    right: 0; /* Anchors right edge of popover with right edge of button */
+    width: 380px;
+    max-height: 200px;
+    background: rgba(10, 15, 30, 0.96);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    padding: 0;
+    overflow-y: auto;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s cubic-bezier(0.25, 0.8, 0.25, 1), 
+                transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transform: translateY(6px);
+}
+
+/* Display and slide up on hover */
+.tooltip-wrapper:hover .tooltip-content {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.tooltip-header {
+    padding: 6px 10px;
+    background: rgba(255, 255, 255, 0.02);
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: #64748b;
+    position: sticky;
+    top: 0;
+    background-color: #0b0f19;
+}
+
+.tooltip-log-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.log-item {
+    padding: 5px 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.01);
+    font-size: 10.5px;
+    color: #cbd5e1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    line-height: 1.3;
+}
+
+.timeline-container {
+    width: 100%;
+}
+
+.timeline-container input[type="range"] {
+    width: 100%;
+    accent-color: #3b82f6;
+    height: 3px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+}
+
+/* Chat Dialogue Panel */
+.dialogue-box {
+    background: rgba(59, 130, 246, 0.03);
+    border: 1px solid rgba(59, 130, 246, 0.1);
+    border-radius: 10px;
+    padding: 6px 10px;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+}
+
+.dialogue-icon {
+    font-size: 15px;
+}
+
+.dialogue-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.dialogue-header {
+    font-size: 8px;
+    color: #94a3b8;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.dialogue-text {
+    font-size: 11px;
+    font-style: italic;
+    color: #e2e8f0;
+    font-family: 'Outfit', sans-serif;
+}
+
+/* ==============================================================================
+   RIGHT PANEL: ACCORDION PLAYER PORTFOLIOS
+   ============================================================================== */
+.portfolios-accordion {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    gap: 10px;
+}
+
+.player-card {
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* Default: share vertical space equally and fill height */
+    background: rgba(15, 23, 42, 0.35);
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    padding: 12px 16px;
+    box-sizing: border-box;
+    overflow: hidden;
+    /* Flex transition creates the accordion grow and squeeze animation */
+    transition: flex 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), 
+                background-color 0.4s ease, 
+                border-color 0.4s ease, 
+                box-shadow 0.4s ease,
+                opacity 0.4s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    position: relative;
+}
+
+/* Parent container hover selectors: grow hovered, squeeze others */
+.portfolios-accordion:hover .player-card:not(:hover) {
+    flex: 0.6; /* Squeezed cards */
+    opacity: 0.55;
+}
+
+.player-card:hover {
+    flex: 1.65; /* Expanded card (75% of 2.2) */
+    background-color: rgba(15, 23, 42, 0.55);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* Player Card Header (Avatar, Name, Status) */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.card-player-identity {
+    font-size: 13px;
+    font-weight: 700;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.player-avatar {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+}
+
+.card-status-badge {
+    padding: 1.5px 6px;
+    border-radius: 9999px;
+    font-size: 8px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+.status-active {
+    background-color: #10b981;
+    color: white;
+}
+
+.status-jail {
+    background-color: #f59e0b;
+    color: white;
+}
+
+.status-bankrupt {
+    background-color: #ef4444;
+    color: white;
+}
+
+/* Cash Amount Display */
+.card-cash-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 3px;
+}
+
+.card-cash-label {
+    font-size: 9px;
+    color: #64748b;
+}
+
+.card-cash-value {
+    font-size: 15px;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.card-cash-progress-bg {
+    width: 100%;
+    height: 3px;
+    background-color: rgba(255,255,255,0.02);
+    border-radius: 1px;
+    margin-bottom: 8px;
+    overflow: hidden;
+}
+
+.card-cash-progress-bar {
+    height: 100%;
+    border-radius: 1px;
+}
+
+/* Inventory Overlay Wrapper */
+.inventory-wrapper {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    width: 100%;
+}
+
+/* Collapsed Property Grid inventory */
+.collapsed-inventory {
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: flex-start;
+    margin-top: 6px;
+    max-height: 72px;
+    opacity: 1;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+                opacity 0.4s ease,
+                margin-top 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.player-card:hover .collapsed-inventory {
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
+    pointer-events: none;
+}
+
+/* One column per color group — squares stack vertically */
+.mini-prop-col {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    align-items: center;
+}
+
+/* Base square for every ownable property */
+.mini-prop-square {
+    width: 13px;
+    height: 13px;
+    border-radius: 2.5px;
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+/* Unowned — dotted outline in group color, transparent fill */
+.mini-prop-unowned {
+    background-color: var(--prop-col, transparent);
+    border: 1px dashed var(--prop-border, #64748b);
+    opacity: 0.55;
+}
+
+/* Owned by this player — solid fill */
+.mini-prop-owned {
+    box-shadow: 0 0 3px rgba(255,255,255,0.1);
+}
+
+/* Mortgaged — solid fill + diagonal strikethrough line */
+.mini-prop-mortgaged::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to bottom right,
+        transparent calc(50% - 2px),
+        rgba(0, 0, 0, 0.85) calc(50% - 2px),
+        rgba(0, 0, 0, 0.85) calc(50% + 2px),
+        transparent calc(50% + 2px)
+    );
+}
+
+/* Expanded Full Inventory (Visible ONLY on Hover) */
+.expanded-inventory {
+    grid-column: 1;
+    grid-row: 1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(5, 1fr); /* 5 equal rows spread out evenly */
+    gap: 12px 20px;
+    margin-top: 0;
+    opacity: 0;
+    max-height: 0;
+    height: 172.5px; /* Fills expanded card area and forces even spacing (75% of 230px) */
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), 
+                opacity 0.4s ease,
+                margin-top 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.player-card:hover .expanded-inventory {
+    opacity: 1;
+    max-height: 200px; /* Match expanded space limit of the card */
+    margin-top: 10px;
+}
+
+.portfolio-group-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 100%;
+}
+
+.group-color-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 2.5px;
+    border: 1px solid rgba(255,255,255,0.1);
+    flex-shrink: 0;
+}
+
+.group-tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+/* Solid rounded tag badges in portfolios */
+.portfolio-tag {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2.5px;
+    padding: 3px 6px !important;
+    border-radius: 4px !important;
+    border: none !important;
+    font-size: 9.5px !important;
+    font-weight: 700 !important;
+    margin: 2px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: transform 0.2s ease;
+}
+.portfolio-tag:hover {
+    transform: scale(1.03);
+}
+.portfolio-tag.mortgaged {
+    opacity: 0.4;
+    text-decoration: line-through;
+    background-color: rgba(255,255,255,0.02) !important;
+    border: 1px dashed rgba(255,255,255,0.15) !important;
+    color: #64748b !important;
+    box-shadow: none !important;
+}
+
+/* Tiny building dots row inside portfolio tags */
+.tag-buildings-row {
+    display: flex;
+    gap: 1.5px;
+    margin-top: 1.5px;
+}
+
+.tag-building-dot {
+    width: 3.5px;
+    height: 3.5px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.tag-building-dot.house {
+    background-color: #10b981;
+}
+
+.tag-building-dot.hotel {
+    background-color: #ef4444;
+    width: 5.5px;
+    height: 5.5px;
+    border-radius: 0.8px;
+}
+
+/* Center Board Transaction Display Styles */
+.center-transaction-container {
+    margin: 8px 0;
+    min-height: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+    max-width: 320px;
+}
+
+.center-transaction-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+}
+
+.center-transaction-item {
+    font-size: 10.5px;
+    line-height: 1.35;
+    color: #e2e8f0;
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 5px 10px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.center-transaction-item strong {
+    font-weight: 700;
+}
+
+.transaction-money-value {
+    color: #fbbf24; /* Amber gold money value color */
+    font-weight: 800;
+    text-shadow: 0 0 10px rgba(251, 191, 36, 0.2);
+}
+
+.center-transaction-empty {
+    font-size: 9.5px;
+    color: #475569;
+    font-style: italic;
+    letter-spacing: 0.5px;
+}
+
+/* Dynamic property squares portfolio styles */
+.property-square {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    box-shadow: 0 1.5px 3px rgba(0,0,0,0.15);
+    transition: transform 0.2s ease;
+    box-sizing: border-box;
+}
+
+.property-square:hover {
+    transform: scale(1.15);
+}
+
+.group-squares-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 3.5px;
+    align-items: center;
+}
+
+/* Grayscale and dimmer style for bankrupt players, leaving avatar colored */
+.bankrupt-player .player-name-text,
+.bankrupt-player .card-cash-value,
+.bankrupt-player .card-cash-progress-bg,
+.bankrupt-player .inventory-wrapper {
+    filter: grayscale(1) opacity(0.4) !important;
+    transition: filter 0.4s ease, opacity 0.4s ease;
+}
+
+.bankrupt-player {
+    border-color: rgba(255, 255, 255, 0.02) !important;
+    background: rgba(15, 23, 42, 0.15) !important;
+    pointer-events: none; /* No interaction for bankrupt players */
+}
+
+/* Jail Bars Center Overlay Visuals */
+.jail-bars-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(1.5px);
+    z-index: 10;
+    border-radius: 14px;
+    pointer-events: none;
+    animation: fadeInJail 0.3s ease-out forwards;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.player-card:hover .jail-bars-overlay {
+    opacity: 0 !important;
+    transform: scale(0.95) !important;
+}
+
+.jail-bars-window {
+    width: 64px;
+    height: 64px;
+    border: 3.5px solid #475569;
+    border-radius: 8px;
+    background: rgba(10, 15, 30, 0.95);
+    display: flex;
+    justify-content: space-evenly;
+    padding: 0 4px;
+    box-sizing: border-box;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.75), inset 0 0 10px rgba(0, 0, 0, 0.85);
+}
+
+.jail-bar {
+    width: 3.5px;
+    height: 100%;
+    background: linear-gradient(90deg, #334155 0%, #cbd5e1 50%, #334155 100%);
+    box-shadow: 1px 0 2px rgba(0, 0, 0, 0.6);
+}
+
+@keyframes fadeInJail {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Rejected trade log entries */
+.log-item-rejected {
+    color: #fca5a5;
+    background: rgba(239, 68, 68, 0.05);
+    border-left: 2px solid rgba(239, 68, 68, 0.35);
+    padding-left: 8px;
+    opacity: 0.85;
+}
+
+.log-item-rejected div {
+    text-decoration: line-through;
+    text-decoration-color: rgba(239, 68, 68, 0.4);
+}
+
+/* Successful trade log entries */
+.log-item-trade {
+    color: #6ee7b7;
+    background: rgba(16, 185, 129, 0.05);
+    border-left: 2px solid rgba(16, 185, 129, 0.35);
+    padding-left: 8px;
+}
+
+/* Rejected trade item in board center panel */
+.center-transaction-rejected {
+    color: #fca5a5 !important;
+    background: rgba(239, 68, 68, 0.07) !important;
+    border: 1px solid rgba(239, 68, 68, 0.2) !important;
+    opacity: 0.75;
+    text-decoration: line-through;
+    text-decoration-color: rgba(239, 68, 68, 0.35);
+}

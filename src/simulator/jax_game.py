@@ -103,7 +103,7 @@ BOARD_RENT_TABLE = jnp.array([
 # ==============================================================================
 
 def mlp_forward(weights, x):
-    """Computes dense forward pass with two hidden layers (64, 32) and 7 output decisions."""
+    """Computes dense forward pass with two hidden layers (64, 32) and 8 output decisions."""
     x = jnp.dot(weights["w1"], x) + weights["b1"]
     x = jax.nn.relu(x)
     x = jnp.dot(weights["w2"], x) + weights["b2"]
@@ -176,6 +176,14 @@ def get_mlp_inputs(state, player_idx, prop_id, trade_info, net_worths=None):
     return jnp.concatenate([
         cash_feats, nw_feats, pos_feats, jail_feats, scalars
     ])
+
+def get_trade_mlp_inputs(state, player_idx, prop_id, trade_info, net_worths=None):
+    """Like get_mlp_inputs but zeroes opp_set_progress (idx 26) and is_blocker (idx 27).
+    Used for all trade evaluation calls to prevent the blocking Nash equilibrium."""
+    feats = get_mlp_inputs(state, player_idx, prop_id, trade_info, net_worths)
+    feats = feats.at[26].set(0.0)  # zero opp_set_progress
+    feats = feats.at[27].set(0.0)  # zero is_blocker
+    return feats
 
 # ==============================================================================
 # 4. Game Simulator Helpers
@@ -361,6 +369,104 @@ def resolve_liquidity_crisis(state, player_idx, needed_cash):
 # 8. Single Turn Step (State Machine)
 # ==============================================================================
 
+def resolve_trading_phase(state, mlp_weights, p_idx):
+    """Allows Player A (p_idx) to evaluate target properties and offer one of their own properties with cash adjustment."""
+    
+    # 1. Evaluate Target Properties (properties owned by opponents)
+    def evaluate_target_prop(pid):
+        owner = state["properties_owner"][pid]
+        is_target = (owner >= 0) & (owner != p_idx) & (~state["players_is_bankrupt"][owner])
+        no_houses = (state["properties_houses"][pid] == 0)
+        not_mortgaged = ~state["properties_mortgaged"][pid]
+        valid_target = is_target & no_houses & not_mortgaged
+        
+        weights_a = jax.tree_util.tree_map(lambda x: x[p_idx], mlp_weights)
+        trade_info = {"cash_diff": 0.0, "prop_val_diff": 0.0}
+        inputs = get_trade_mlp_inputs(state, p_idx, pid, trade_info)  # blocker-masked
+        outputs = mlp_forward(weights_a, inputs)
+        return jnp.where(valid_target, outputs[4], -1.0)
+        
+    target_desirabilities = jax.vmap(evaluate_target_prop)(OWNABLE_INDICES)
+    best_target_idx = jnp.argmax(target_desirabilities)
+    best_target_score = target_desirabilities[best_target_idx]
+    target_pid = OWNABLE_INDICES[best_target_idx]
+    target_pid_safe = jnp.maximum(0, target_pid)
+    
+    # 2. Evaluate Offer Properties (properties owned by proposer)
+    def evaluate_offer_prop(pid):
+        is_owned_by_self = (state["properties_owner"][pid] == p_idx)
+        no_houses = (state["properties_houses"][pid] == 0)
+        not_mortgaged = ~state["properties_mortgaged"][pid]
+        valid_offer = is_owned_by_self & no_houses & not_mortgaged
+        
+        weights_a = jax.tree_util.tree_map(lambda x: x[p_idx], mlp_weights)
+        trade_info = {"cash_diff": 0.0, "prop_val_diff": 0.0}
+        inputs = get_trade_mlp_inputs(state, p_idx, pid, trade_info)  # blocker-masked
+        outputs = mlp_forward(weights_a, inputs)
+        return jnp.where(valid_offer, outputs[5], -1.0)
+        
+    offer_desirabilities = jax.vmap(evaluate_offer_prop)(OWNABLE_INDICES)
+    best_offer_idx = jnp.argmax(offer_desirabilities)
+    best_offer_score = offer_desirabilities[best_offer_idx]
+    swap_pid = OWNABLE_INDICES[best_offer_idx]
+    swap_pid_safe = jnp.maximum(0, swap_pid)
+    
+    # 3. Calculate Cash Offer (proposer's network Output 6 determines multiplier)
+    proposer_weights = jax.tree_util.tree_map(lambda x: x[p_idx], mlp_weights)
+    trade_info_propose = {"cash_diff": 0.0, "prop_val_diff": 0.0}
+    inputs_propose = get_trade_mlp_inputs(state, p_idx, target_pid_safe, trade_info_propose)  # blocker-masked
+    proposer_outputs = mlp_forward(proposer_weights, inputs_propose)
+    
+    cost_target = BOARD_COST[target_pid_safe]
+    
+    has_valid_offer = (best_offer_score > -0.5)
+    cost_swap = jnp.where(has_valid_offer, BOARD_COST[swap_pid_safe], 0)
+    cost_diff = cost_target - cost_swap
+    
+    cash_offer = (cost_diff + cost_target * (proposer_outputs[6] - 0.5) * 3.0).astype(jnp.int32)
+    
+    owner_b = state["properties_owner"][target_pid_safe]
+    owner_b_safe = jnp.maximum(0, owner_b)
+    
+    # 4. Financial Validity
+    proposer_has_cash = state["players_cash"][p_idx] >= cash_offer
+    owner_has_cash = state["players_cash"][owner_b_safe] >= -cash_offer
+    cash_ok = jnp.where(cash_offer >= 0, proposer_has_cash, owner_has_cash)
+    
+    # 5. Receiver evaluates with Output 7 (dedicated acceptance output, blocker-masked inputs)
+    owner_weights = jax.tree_util.tree_map(lambda x: x[owner_b_safe], mlp_weights)
+    trade_info_evaluate = {
+        "cash_diff": cash_offer.astype(jnp.float32), 
+        "prop_val_diff": (cost_swap - cost_target).astype(jnp.float32)
+    }
+    inputs_evaluate = get_trade_mlp_inputs(state, owner_b_safe, target_pid_safe, trade_info_evaluate)
+    owner_outputs = mlp_forward(owner_weights, inputs_evaluate)
+    
+    # Stochastic acceptance: receiver accepts with probability = output[7]
+    # This prevents deterministic blocking and allows trade exploration during training
+    rng_key, subkey = jax.random.split(state["rng_key"])
+    accepts = (jax.random.uniform(subkey) < owner_outputs[7])
+    
+    # 6. Execute Trade
+    has_valid_target = (best_target_score > 0.5)
+    execute_trade = has_valid_target & has_valid_offer & cash_ok & accepts
+    
+    new_owners = state["properties_owner"]
+    new_owners = jnp.where(execute_trade, new_owners.at[target_pid_safe].set(p_idx), new_owners)
+    new_owners = jnp.where(execute_trade, new_owners.at[swap_pid_safe].set(owner_b_safe), new_owners)
+    
+    new_cash = state["players_cash"]
+    new_cash = jnp.where(execute_trade, new_cash.at[p_idx].add(-cash_offer), new_cash)
+    new_cash = jnp.where(execute_trade, new_cash.at[owner_b_safe].add(cash_offer), new_cash)
+    
+    return {
+        **state,
+        "properties_owner": new_owners,
+        "players_cash": new_cash,
+        "rng_key": rng_key
+    }
+
+
 def game_step(state, mlp_weights):
     """Simulates a single player's turn in JAX, using fast JAX loops."""
     p_idx = state["current_player_idx"]
@@ -522,9 +628,10 @@ def game_step(state, mlp_weights):
         temp_state["bankruptcy_turn"] = jnp.where(first_bankruptcy, s["turn_number"], temp_state["bankruptcy_turn"])
         
         prop_mask_self = (temp_state["properties_owner"] == p_idx)
-        temp_state["properties_owner"] = jnp.where(still_bankrupt & prop_mask_self, -1, temp_state["properties_owner"])
+        creditor = jnp.where(is_rent_due, temp_state["properties_owner"][landing_pos], -1)
+        temp_state["properties_owner"] = jnp.where(still_bankrupt & prop_mask_self, creditor, temp_state["properties_owner"])
         temp_state["properties_houses"] = jnp.where(still_bankrupt & prop_mask_self, 0, temp_state["properties_houses"])
-        temp_state["properties_mortgaged"] = jnp.where(still_bankrupt & prop_mask_self, False, temp_state["properties_mortgaged"])
+        temp_state["properties_mortgaged"] = jnp.where(still_bankrupt & prop_mask_self & (creditor == -1), False, temp_state["properties_mortgaged"])
         temp_state["players_cash"] = jnp.where(still_bankrupt, temp_state["players_cash"].at[p_idx].set(0), temp_state["players_cash"])
         
         # Precompute Net Worths once before building/unmortgaging loops
@@ -623,6 +730,14 @@ def game_step(state, mlp_weights):
         temp_state = jax.lax.cond(
             ~temp_state["players_is_bankrupt"][p_idx],
             lambda state_arg: jax.lax.fori_loop(0, 28, unmortgage_apply_body, state_arg),
+            lambda state_arg: state_arg,
+            temp_state
+        )
+        
+        # Conditionally run trading phase if not bankrupt
+        temp_state = jax.lax.cond(
+            ~temp_state["players_is_bankrupt"][p_idx],
+            lambda state_arg: resolve_trading_phase(state_arg, mlp_weights, p_idx),
             lambda state_arg: state_arg,
             temp_state
         )

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎩 JAX Monopoly Dashboard</title>
+    <!-- Custom styling stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Left Column: Board and Replay Controls -->
+        <div class="left-panel">
+            <!-- Board container -->
+            <div id="board-wrapper" class="board-wrapper">
+                <!-- Javascript will dynamically inject the cells and central dice card here -->
+            </div>
+            
+            <!-- Controls and Timeline panel -->
+            <div class="controls-panel">
+                <div class="playback-buttons">
+                    <button id="btn-prev" class="btn" title="Previous step">◀️ Prev</button>
+                    <button id="btn-next" class="btn" title="Next step">Next ▶️</button>
+                    
+                    <div class="tooltip-wrapper">
+                        <button id="btn-actions" class="btn" style="margin-left: 4px; pointer-events: none;">📜 Actions</button>
+                        <div class="tooltip-content" id="action-log-tooltip">
+                            <!-- Action items dynamically injected -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-container">
+                    <input type="range" id="timeline-slider" min="0" max="0" value="0">
+                </div>
+                
+                <!-- Dialogue Panel -->
+                <div class="dialogue-box" id="dialogue-box" style="display: none;">
+                    <span class="dialogue-icon">💬</span>
+                    <div class="dialogue-content">
+                        <div class="dialogue-header" id="dialogue-header">PLAYER SAYING:</div>
+                        <div class="dialogue-text" id="dialogue-text">"..."</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Column: Vertical Flex Accordion Player Portfolios -->
+        <div class="right-panel">
+            <div class="portfolios-accordion" id="portfolios-accordion">
+                <!-- Player cards dynamically injected -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Core logic script -->
+    <script src="app.js"></script>
+</body>
+</html>
